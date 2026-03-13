@@ -1,2 +1,0 @@
-# DevOpt
-DevOpt Projects

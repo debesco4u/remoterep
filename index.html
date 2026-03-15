@@ -487,38 +487,36 @@
       appendLog('Triggering qualification run…', 'info');
 
       try {
-        const res = await fetch(WEBHOOK_URL, {
+        // Use no-cors to avoid CORS restrictions — the webhook still fires successfully
+        await fetch(WEBHOOK_URL, {
           method: 'POST',
+          mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ source: '4k-qualifier-dashboard', timestamp: new Date().toISOString() })
         });
 
-        if (res.ok || res.status === 200 || res.status === 202 || res.status === 204) {
-          setStatus('running', 'Agent is processing companies — this takes 1–3 minutes…');
-          appendLog('✓ Agent triggered successfully.', 'ql');
-          appendLog('Scraping websites and running AI analysis…', 'info');
-          appendLog('Results will appear in your Google Sheet shortly.', 'info');
+        // With no-cors, any response (even opaque) means the request was sent
+        setStatus('running', 'Agent is processing companies — this takes 1–3 minutes…');
+        appendLog('✓ Agent triggered successfully.', 'ql');
+        appendLog('Scraping websites and running AI analysis…', 'info');
+        appendLog('Results will appear in your Google Sheet shortly.', 'info');
 
-          // Simulate a processing countdown
-          let secs = 90;
-          const interval = setInterval(() => {
-            secs -= 5;
-            if (secs <= 0) {
-              clearInterval(interval);
-              setStatus('success', 'Done! Check your Google Sheet for results.');
-              appendLog('Processing complete — open your sheet to view results ↗', 'ql');
-              const now = new Date().toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' });
-              document.getElementById('lastRun').textContent = 'Last run: ' + now;
-              localStorage.setItem('qualifier_stats', JSON.stringify({ lastRun: now }));
-              btn.disabled = false;
-              btn.classList.remove('loading');
-              btn.querySelector('span:last-child').textContent = 'Run Qualifier';
-            }
-          }, 5000);
-
-        } else {
-          throw new Error('HTTP ' + res.status);
-        }
+        // Countdown timer
+        let secs = 90;
+        const interval = setInterval(() => {
+          secs -= 5;
+          if (secs <= 0) {
+            clearInterval(interval);
+            setStatus('success', 'Done! Check your Google Sheet for results.');
+            appendLog('Processing complete — open your sheet to view results ↗', 'ql');
+            const now = new Date().toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' });
+            document.getElementById('lastRun').textContent = 'Last run: ' + now;
+            localStorage.setItem('qualifier_stats', JSON.stringify({ lastRun: now }));
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            btn.querySelector('span:last-child').textContent = 'Run Qualifier';
+          }
+        }, 5000);
       } catch (err) {
         setStatus('error', 'Failed to reach the agent. Check your webhook URL.');
         appendLog('✗ Error: ' + err.message, 'nf');

@@ -6,114 +6,208 @@
   <title>4K Projects — Company Qualifier</title>
   <style>
     :root {
-      --bg: #0a0a0f;
-      --surface: #13131a;
-      --surface2: #1c1c27;
-      --border: #2a2a3d;
-      --accent: #6c63ff;
-      --accent-glow: rgba(108, 99, 255, 0.25);
-      --accent-hover: #8b84ff;
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --surface2: #1e1e1e;
+      --border: #2a2a2a;
+      --accent: #e8ff00;
+      --accent-dim: rgba(232,255,0,0.12);
+      --text: #f0f0f0;
+      --text-muted: #888;
       --green: #22c55e;
       --red: #ef4444;
-      --amber: #f59e0b;
-      --text: #e8e8f0;
-      --muted: #8888aa;
-      --radius: 14px;
+      --orange: #f97316;
+      --blue: #3b82f6;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      display: flex;
       align-items: center;
-      padding: 40px 20px 80px;
+      justify-content: space-between;
+      padding: 18px 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
     }
-
-    /* Ambient background glow */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -200px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 800px;
-      height: 500px;
-      background: radial-gradient(ellipse, rgba(108, 99, 255, 0.12) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 14px; color: #000;
+      letter-spacing: -1px;
     }
+    .logo-text { font-size: 15px; font-weight: 600; color: var(--text); }
+    .logo-sub  { font-size: 11px; color: var(--text-muted); }
+    .sheet-link {
+      display: flex; align-items: center; gap-6px;
+      font-size: 13px; color: var(--text-muted);
+      text-decoration: none; border: 1px solid var(--border);
+      padding: 7px 14px; border-radius: 8px;
+      transition: all .2s;
+    }
+    .sheet-link:hover { color: var(--accent); border-color: var(--accent); }
 
-    .container {
-      position: relative;
-      z-index: 1;
-      width: 100%;
+    /* ── HERO ── */
+    .hero {
+      padding: 48px 32px 0;
       max-width: 780px;
+      margin: 0 auto;
+      width: 100%;
     }
-
-    /* Header */
-    header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 40px;
+    .hero h1 {
+      font-size: 32px; font-weight: 700;
+      line-height: 1.2; margin-bottom: 10px;
     }
+    .hero h1 span { color: var(--accent); }
+    .hero p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
 
-    .logo {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, var(--accent), #9b59b6);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-      box-shadow: 0 4px 20px var(--accent-glow);
-    }
-
-    header h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    header p {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    /* Cards */
+    /* ── MAIN CARD ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px;
-      margin-bottom: 20px;
+      border-radius: 16px;
+      padding: 32px;
+      margin: 32px auto;
+      max-width: 780px;
+      width: calc(100% - 64px);
     }
 
-    .card-title {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
+    /* ── CONFIG SECTION ── */
+    .config-header {
+      font-size: 12px; font-weight: 600;
+      color: var(--text-muted);
       text-transform: uppercase;
-      color: var(--muted);
+      letter-spacing: .08em;
       margin-bottom: 16px;
     }
+    .config-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    @media(max-width: 600px) { .config-row { grid-template-columns: 1fr; } }
+    .field label {
+      display: block;
+      font-size: 12px; color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .field input:focus { border-color: var(--accent); }
+    .field input::placeholder { color: #555; }
+    .save-hint {
+      font-size: 11px; color: var(--text-muted);
+      margin-top: 8px; margin-bottom: 24px;
+    }
+    .save-hint a { color: var(--accent); cursor: pointer; }
 
-    /* Stats row */
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+    /* ── RUN BUTTON ── */
+    .run-section { text-align: center; }
+    .btn-run {
+      display: inline-flex;
+      align-items: center; gap: 10px;
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px 40px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all .2s;
+      width: 100%;
+      justify-content: center;
+      max-width: 340px;
+    }
+    .btn-run:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(232,255,0,.25); }
+    .btn-run:active { transform: translateY(0); }
+    .btn-run:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-run .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(0,0,0,.3);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .btn-run.loading .spinner { display: block; }
+    .btn-run.loading .btn-icon { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── STATUS BANNER ── */
+    .status-banner {
+      display: none;
+      align-items: center; gap: 12px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+    .status-banner.show { display: flex; }
+    .status-banner.running { background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.3); color: #93c5fd; }
+    .status-banner.success { background: rgba(34,197,94,.12);  border: 1px solid rgba(34,197,94,.3);  color: #86efac; }
+    .status-banner.error   { background: rgba(239,68,68,.12);  border: 1px solid rgba(239,68,68,.3);  color: #fca5a5; }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+      background: currentColor;
+    }
+    .status-banner.running .status-dot { animation: pulse 1.2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* ── LOG ── */
+    .log-wrap {
+      margin-top: 20px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      max-height: 220px;
+      overflow-y: auto;
+      display: none;
+    }
+    .log-wrap.show { display: block; }
+    .log-line {
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      line-height: 1.8;
+      color: var(--text-muted);
+    }
+    .log-line.info   { color: #60a5fa; }
+    .log-line.ok     { color: var(--green); }
+    .log-line.err    { color: var(--red); }
+    .log-line.accent { color: var(--accent); }
+
+    /* ── STATS ── */
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
-      margin-bottom: 20px;
+      margin-top: 28px;
     }
-
     .stat {
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -121,410 +215,280 @@
       padding: 16px;
       text-align: center;
     }
+    .stat-val { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+    .stat-label { font-size: 11px; color: var(--text-muted); }
 
-    .stat-value {
-      font-size: 1.8rem;
-      font-weight: 700;
-      line-height: 1;
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 6px;
-    }
-
-    .stat-value.green { color: var(--green); }
-    .stat-value.red   { color: var(--red); }
-    .stat-value.amber { color: var(--amber); }
-
-    /* Run button */
-    .run-section {
-      text-align: center;
-      padding: 36px 28px;
-    }
-
-    .run-btn {
-      background: linear-gradient(135deg, var(--accent), #9b59b6);
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 18px 52px;
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      box-shadow: 0 6px 30px var(--accent-glow);
-      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .run-btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 40px rgba(108, 99, 255, 0.4);
-    }
-
-    .run-btn:active:not(:disabled) {
-      transform: translateY(0);
-    }
-
-    .run-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .run-btn .spinner {
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(255,255,255,0.4);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      display: none;
-    }
-
-    .run-btn.loading .spinner { display: block; }
-    .run-btn.loading .btn-icon { display: none; }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .run-desc {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-top: 14px;
-      line-height: 1.5;
-    }
-
-    /* Status */
-    .status-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 18px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      margin-top: 20px;
-      transition: all 0.3s;
-    }
-
-    .status-bar.idle     { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
-    .status-bar.running  { background: rgba(108,99,255,0.12); color: #a89fff; border: 1px solid rgba(108,99,255,0.3); }
-    .status-bar.success  { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
-    .status-bar.error    { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .status-bar.idle    .status-dot { background: var(--muted); }
-    .status-bar.running .status-dot { background: var(--accent); animation: pulse 1s infinite; }
-    .status-bar.success .status-dot { background: var(--green); }
-    .status-bar.error   .status-dot { background: var(--red); }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
-
-    /* Log */
-    .log-wrap {
-      background: #0d0d14;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-      font-family: 'Fira Code', 'Cascadia Code', monospace;
-      font-size: 0.78rem;
-      color: #9999bb;
-      min-height: 120px;
-      max-height: 220px;
-      overflow-y: auto;
-      line-height: 1.7;
-    }
-
-    .log-line { display: block; }
-    .log-line.ql   { color: #4ade80; }
-    .log-line.nf   { color: #f87171; }
-    .log-line.nr   { color: var(--amber); }
-    .log-line.info { color: #9999bb; }
-    .log-line.dim  { color: #555577; }
-
-    /* Sheet link */
-    .sheet-link {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 20px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      text-decoration: none;
-      color: var(--text);
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .sheet-link:hover {
-      border-color: var(--accent);
-      background: rgba(108, 99, 255, 0.08);
-    }
-
-    .sheet-icon {
-      width: 36px;
-      height: 36px;
-      background: rgba(34,197,94,0.15);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    .sheet-info strong { display: block; font-size: 0.9rem; }
-    .sheet-info span { font-size: 0.78rem; color: var(--muted); }
-
-    .sheet-arrow { margin-left: auto; color: var(--muted); font-size: 1.1rem; }
-
-    /* How it works */
-    .steps {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .step {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-    }
-
-    .step-num {
-      width: 28px;
-      height: 28px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--accent);
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .step-text strong { font-size: 0.88rem; display: block; }
-    .step-text span { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
-
-    /* Last run */
-    .last-run {
-      font-size: 0.78rem;
-      color: var(--muted);
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    /* Footer */
+    /* ── FOOTER ── */
     footer {
-      margin-top: 40px;
-      font-size: 0.75rem;
-      color: #44445a;
+      margin-top: auto;
+      padding: 20px 32px;
       text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
     }
   </style>
 </head>
 <body>
-  <div class="container">
 
-    <header>
-      <div class="logo">🎯</div>
-      <div>
-        <h1>Company Qualifier</h1>
-        <p>4K Projects · AI-powered lead qualification</p>
-      </div>
-    </header>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">4K</div>
+    <div>
+      <div class="logo-text">4K Projects</div>
+      <div class="logo-sub">Company Qualifier</div>
+    </div>
+  </div>
+  <a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1vwYq8DmSBbc2BOsAgWBNMFMORtbiYuErufPHxEEOFo4/edit" target="_blank">
+    📊 Open Google Sheet ↗
+  </a>
+</div>
 
-    <!-- Stats -->
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-value green" id="stat-qualified">—</div>
-        <div class="stat-label">✅ Qualified</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value red" id="stat-notfit">—</div>
-        <div class="stat-label">❌ Not a Fit</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value amber" id="stat-review">—</div>
-        <div class="stat-label">⚠️ Needs Review</div>
-      </div>
+<!-- HERO -->
+<div class="hero">
+  <h1>Qualify companies<br><span>at the click of a button.</span></h1>
+  <p>Add companies to your Google Sheet, then hit Run. The agent scrapes each website, runs AI analysis, and writes results back — qualified, not a fit, or needs review.</p>
+</div>
+
+<!-- MAIN CARD -->
+<div class="card">
+
+  <!-- CONFIG -->
+  <div class="config-header">⚙️ GitHub Configuration</div>
+  <div class="config-row">
+    <div class="field">
+      <label>GitHub Owner (username or org)</label>
+      <input id="ghOwner" type="text" placeholder="debesco4u" />
+    </div>
+    <div class="field">
+      <label>Repository Name</label>
+      <input id="ghRepo" type="text" placeholder="remoterep" />
+    </div>
+  </div>
+  <div class="config-row">
+    <div class="field" style="grid-column:1/-1">
+      <label>GitHub Personal Access Token <span style="color:#555">(needs <code>actions:write</code> scope)</span></label>
+      <input id="ghToken" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+    </div>
+  </div>
+  <p class="save-hint">Settings are saved in your browser. <a onclick="clearSettings()">Clear saved settings</a></p>
+
+  <hr class="divider" />
+
+  <!-- RUN -->
+  <div class="run-section">
+    <button class="btn-run" id="runBtn" onclick="runQualifier()">
+      <div class="spinner"></div>
+      <span class="btn-icon">▶</span>
+      <span id="btnText">Run Qualifier</span>
+    </button>
+
+    <div class="status-banner" id="statusBanner">
+      <div class="status-dot"></div>
+      <span id="statusText"></span>
     </div>
 
-    <!-- Run -->
-    <div class="card run-section">
-      <p class="card-title">Qualification Engine</p>
-      <button class="run-btn" id="runBtn" onclick="runQualifier()">
-        <span class="btn-icon">▶</span>
-        <span class="spinner"></span>
-        Run Qualifier
-      </button>
-      <p class="run-desc">
-        Scans your Google Sheet for unprocessed companies,<br />
-        analyses their websites with AI, and writes results back automatically.
-      </p>
-      <div class="status-bar idle" id="statusBar">
-        <span class="status-dot"></span>
-        <span id="statusText">Ready to run</span>
-      </div>
-      <p class="last-run" id="lastRun"></p>
+    <div class="log-wrap" id="logWrap">
+      <div id="logOutput"></div>
     </div>
-
-    <!-- Log -->
-    <div class="card">
-      <p class="card-title">Activity Log</p>
-      <div class="log-wrap" id="logWrap">
-        <span class="log-line dim">// Waiting for next run...</span>
-      </div>
-    </div>
-
-    <!-- Sheet link -->
-    <div class="card">
-      <p class="card-title">Data Source</p>
-      <a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1vwYq8DmSBbc2BOsAgWBNMFMORtbiYuErufPHxEEOFo4/edit" target="_blank">
-        <div class="sheet-icon">📊</div>
-        <div class="sheet-info">
-          <strong>4K Projects — Company Qualification</strong>
-          <span>Google Sheets · Click to open and add companies</span>
-        </div>
-        <span class="sheet-arrow">↗</span>
-      </a>
-    </div>
-
-    <!-- How it works -->
-    <div class="card">
-      <p class="card-title">How It Works</p>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-text">
-            <strong>Add companies to the sheet</strong>
-            <span>Paste company name and website URL into the Google Sheet above. Leave the Qualification columns empty.</span>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-text">
-            <strong>Click "Run Qualifier"</strong>
-            <span>The AI agent will pick up all unprocessed rows and start analysing them.</span>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-text">
-            <strong>AI analyses each website</strong>
-            <span>Each company's site is scraped and assessed — are they a workplace design or office fit-out company?</span>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">4</div>
-          <div class="step-text">
-            <strong>Results written back automatically</strong>
-            <span>✅ Qualified, ❌ Not a Fit, or ⚠️ Needs Review — with a reason and confidence score — all in your sheet.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <footer>Built for 4K Projects · Powered by AI</footer>
   </div>
 
-  <script>
-    const WEBHOOK_URL = 'https://hooks.tasklet.ai/whe_wmzcasgtvht8eyn6rq0m';
-    const SHEET_ID = '1vwYq8DmSBbc2BOsAgWBNMFMORtbiYuErufPHxEEOFo4';
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val" id="statRuns">—</div>
+      <div class="stat-label">Runs this session</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" id="statLast">—</div>
+      <div class="stat-label">Last triggered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" id="statJob">—</div>
+      <div class="stat-label">Last job status</div>
+    </div>
+  </div>
+</div>
 
-    // Load stats from localStorage
-    const saved = JSON.parse(localStorage.getItem('qualifier_stats') || '{}');
-    if (saved.qualified !== undefined) updateStats(saved.qualified, saved.notfit, saved.review);
-    if (saved.lastRun) document.getElementById('lastRun').textContent = 'Last run: ' + saved.lastRun;
+<footer>4K Projects · Company Qualifier · Built with AI automation</footer>
 
-    function updateStats(q, n, r) {
-      document.getElementById('stat-qualified').textContent = q ?? '—';
-      document.getElementById('stat-notfit').textContent    = n ?? '—';
-      document.getElementById('stat-review').textContent    = r ?? '—';
+<script>
+  const WORKFLOW_FILE = 'qualify.yml';
+  let runCount = 0;
+  let pollTimer = null;
+
+  // ── Persistence ──────────────────────────────────────────────────────────
+  function loadSettings() {
+    document.getElementById('ghOwner').value = localStorage.getItem('ghOwner') || 'debesco4u';
+    document.getElementById('ghRepo').value  = localStorage.getItem('ghRepo')  || 'remoterep';
+    document.getElementById('ghToken').value = localStorage.getItem('ghToken') || '';
+  }
+
+  function saveSettings() {
+    localStorage.setItem('ghOwner', document.getElementById('ghOwner').value.trim());
+    localStorage.setItem('ghRepo',  document.getElementById('ghRepo').value.trim());
+    localStorage.setItem('ghToken', document.getElementById('ghToken').value.trim());
+  }
+
+  function clearSettings() {
+    ['ghOwner','ghRepo','ghToken'].forEach(k => localStorage.removeItem(k));
+    document.getElementById('ghOwner').value = '';
+    document.getElementById('ghRepo').value  = '';
+    document.getElementById('ghToken').value = '';
+    log('Settings cleared.', 'info');
+  }
+
+  // ── Logging ───────────────────────────────────────────────────────────────
+  function log(msg, cls = '') {
+    const wrap = document.getElementById('logWrap');
+    const out  = document.getElementById('logOutput');
+    wrap.classList.add('show');
+    const ts = new Date().toLocaleTimeString('en-GB', { hour12: false });
+    const line = document.createElement('div');
+    line.className = 'log-line ' + cls;
+    line.textContent = `[${ts}] ${msg}`;
+    out.appendChild(line);
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+
+  function setStatus(type, msg) {
+    const banner = document.getElementById('statusBanner');
+    banner.className = 'status-banner show ' + type;
+    document.getElementById('statusText').textContent = msg;
+  }
+
+  // ── Main trigger ──────────────────────────────────────────────────────────
+  async function runQualifier() {
+    saveSettings();
+
+    const owner = document.getElementById('ghOwner').value.trim();
+    const repo  = document.getElementById('ghRepo').value.trim();
+    const token = document.getElementById('ghToken').value.trim();
+
+    if (!owner || !repo || !token) {
+      log('⚠ Please fill in GitHub Owner, Repo, and Token.', 'err');
+      setStatus('error', 'Missing configuration — fill in all fields above.');
+      return;
     }
 
-    function setStatus(type, text) {
-      const bar = document.getElementById('statusBar');
-      bar.className = 'status-bar ' + type;
-      document.getElementById('statusText').textContent = text;
-    }
+    const btn = document.getElementById('runBtn');
+    btn.disabled = true;
+    btn.classList.add('loading');
+    document.getElementById('btnText').textContent = 'Triggering…';
+    setStatus('running', 'Sending trigger to GitHub…');
+    log('Triggering GitHub Actions workflow…', 'info');
 
-    function appendLog(text, cls = 'info') {
-      const wrap = document.getElementById('logWrap');
-      // Clear placeholder on first real log
-      if (wrap.querySelector('.dim')) wrap.innerHTML = '';
-      const line = document.createElement('span');
-      line.className = 'log-line ' + cls;
-      line.textContent = '[' + new Date().toLocaleTimeString() + '] ' + text;
-      wrap.appendChild(line);
-      wrap.scrollTop = wrap.scrollHeight;
-    }
-
-    async function runQualifier() {
-      const btn = document.getElementById('runBtn');
-      btn.disabled = true;
-      btn.classList.add('loading');
-      btn.querySelector('span:last-child').textContent = 'Running…';
-
-      setStatus('running', 'Sending request to AI agent…');
-      appendLog('Triggering qualification run…', 'info');
-
-      try {
-        // Use no-cors to avoid CORS restrictions — the webhook still fires successfully
-        await fetch(WEBHOOK_URL, {
+    try {
+      // 1. Dispatch the workflow
+      const dispatchRes = await fetch(
+        `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${WORKFLOW_FILE}/dispatches`,
+        {
           method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ source: '4k-qualifier-dashboard', timestamp: new Date().toISOString() })
-        });
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ref: 'main', inputs: { triggered_by: 'dashboard' } }),
+        }
+      );
 
-        // With no-cors, any response (even opaque) means the request was sent
-        setStatus('running', 'Agent is processing companies — this takes 1–3 minutes…');
-        appendLog('✓ Agent triggered successfully.', 'ql');
-        appendLog('Scraping websites and running AI analysis…', 'info');
-        appendLog('Results will appear in your Google Sheet shortly.', 'info');
+      if (dispatchRes.status === 404) throw new Error('Workflow file not found. Make sure qualify.yml is in .github/workflows/');
+      if (dispatchRes.status === 401) throw new Error('Invalid GitHub token. Check it has actions:write permission.');
+      if (dispatchRes.status === 422) throw new Error('Unprocessable. Is the ref "main" correct for your repo?');
+      if (!dispatchRes.ok) throw new Error(`GitHub API error: HTTP ${dispatchRes.status}`);
 
-        // Countdown timer
-        let secs = 90;
-        const interval = setInterval(() => {
-          secs -= 5;
-          if (secs <= 0) {
-            clearInterval(interval);
-            setStatus('success', 'Done! Check your Google Sheet for results.');
-            appendLog('Processing complete — open your sheet to view results ↗', 'ql');
-            const now = new Date().toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' });
-            document.getElementById('lastRun').textContent = 'Last run: ' + now;
-            localStorage.setItem('qualifier_stats', JSON.stringify({ lastRun: now }));
-            btn.disabled = false;
-            btn.classList.remove('loading');
-            btn.querySelector('span:last-child').textContent = 'Run Qualifier';
-          }
-        }, 5000);
-      } catch (err) {
-        setStatus('error', 'Failed to reach the agent. Check your webhook URL.');
-        appendLog('✗ Error: ' + err.message, 'nf');
-        btn.disabled = false;
-        btn.classList.remove('loading');
-        btn.querySelector('span:last-child').textContent = 'Run Qualifier';
-      }
+      runCount++;
+      document.getElementById('statRuns').textContent = runCount;
+      document.getElementById('statLast').textContent = new Date().toLocaleTimeString('en-GB', { hour12: false });
+      log('✓ Workflow dispatched! Waiting for run to start…', 'ok');
+      setStatus('running', 'Workflow started — polling for status…');
+      document.getElementById('btnText').textContent = 'Running…';
+
+      // 2. Poll for the run
+      await new Promise(r => setTimeout(r, 4000));
+      pollWorkflowStatus(owner, repo, token);
+
+    } catch (err) {
+      log('✗ ' + err.message, 'err');
+      setStatus('error', err.message);
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      document.getElementById('btnText').textContent = 'Run Qualifier';
     }
-  </script>
+  }
+
+  // ── Polling ───────────────────────────────────────────────────────────────
+  async function pollWorkflowStatus(owner, repo, token) {
+    const btn = document.getElementById('runBtn');
+    let attempts = 0;
+    const maxAttempts = 40; // ~10 minutes
+
+    clearInterval(pollTimer);
+    pollTimer = setInterval(async () => {
+      attempts++;
+      try {
+        const res = await fetch(
+          `https://api.github.com/repos/${owner}/${repo}/actions/runs?per_page=5`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+            },
+          }
+        );
+        const data = await res.json();
+        const run  = data.workflow_runs?.[0];
+        if (!run) return;
+
+        const status     = run.status;       // queued | in_progress | completed
+        const conclusion = run.conclusion;   // success | failure | null
+        const runUrl     = run.html_url;
+
+        if (status === 'queued') {
+          log('⏳ Job queued…', 'info');
+          setStatus('running', 'Job is queued — waiting for a runner…');
+        } else if (status === 'in_progress') {
+          log('⚙️ Job running…', 'info');
+          setStatus('running', 'Qualification in progress — scraping websites & running AI…');
+          document.getElementById('btnText').textContent = 'Running…';
+        } else if (status === 'completed') {
+          clearInterval(pollTimer);
+          if (conclusion === 'success') {
+            log('✅ Qualification complete! Open your Google Sheet to see results.', 'ok');
+            setStatus('success', '✅ Done! Open your Google Sheet to view the results.');
+            document.getElementById('statJob').textContent = '✅ Success';
+          } else {
+            log(`✗ Job ended with: ${conclusion}. Check GitHub Actions for logs.`, 'err');
+            setStatus('error', `Job finished with status: ${conclusion}. Check GitHub Actions.`);
+            document.getElementById('statJob').textContent = '❌ ' + conclusion;
+          }
+          log(`View run: ${runUrl}`, 'info');
+          btn.disabled = false;
+          btn.classList.remove('loading');
+          document.getElementById('btnText').textContent = 'Run Qualifier';
+          return;
+        }
+
+        if (attempts >= maxAttempts) {
+          clearInterval(pollTimer);
+          log('⚠ Timed out polling. Check GitHub Actions directly.', 'err');
+          setStatus('error', 'Polling timed out — check GitHub Actions for the run status.');
+          btn.disabled = false;
+          btn.classList.remove('loading');
+          document.getElementById('btnText').textContent = 'Run Qualifier';
+        }
+      } catch (e) {
+        log('Poll error: ' + e.message, 'err');
+      }
+    }, 15000); // poll every 15s
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  loadSettings();
+</script>
 </body>
 </html>

@@ -1,30 +1,60 @@
 # 4K Projects — Company Qualifier
 
-An AI-powered lead qualification dashboard for 4K Projects.
+A one-click AI tool that qualifies companies for outreach by scraping their website and deciding if they're a workplace design / office fit-out company.
 
-## What it does
+## How it works
 
-- Reads companies from a Google Sheet
-- Scrapes each company's website
-- Uses AI to determine if they are a workplace design / office fit-out company
-- Writes results back to the sheet (✅ Qualified / ❌ Not a Fit / ⚠️ Needs Review)
+1. You add companies to the Google Sheet (columns A–D)
+2. You open the dashboard and click **Run Qualifier**
+3. A GitHub Action fires — it scrapes each website and uses GPT-4o-mini to classify each company
+4. Results are written back to the Google Sheet (Qualified / Not a Fit / Needs Review)
 
-## Hosting on GitHub Pages
+---
 
-1. Go to your repo → **Settings** → **Pages**
-2. Under **Source**, select `Deploy from a branch`
-3. Choose **main** branch, **/ (root)** folder
-4. Click **Save**
-5. Your app will be live at: `https://debesco4u.github.io/remoterep/`
+## Setup (one-time)
 
-## Usage
+### 1. Add GitHub Secrets
 
-1. Open the live app
-2. Add companies to the [Google Sheet](https://docs.google.com/spreadsheets/d/1vwYq8DmSBbc2BOsAgWBNMFMORtbiYuErufPHxEEOFo4/edit)
-3. Click **Run Qualifier**
-4. Wait ~1–3 minutes for results to appear in the sheet
+Go to your repo → **Settings → Secrets and variables → Actions → New repository secret**
 
-## Files
+Add these three secrets:
 
-- `index.html` — the full single-page dashboard app
-- `README.md` — this file
+| Secret name | Value |
+|---|---|
+| `OPENAI_API_KEY` | Your OpenAI API key (from platform.openai.com) |
+| `SPREADSHEET_ID` | `1vwYq8DmSBbc2BOsAgWBNMFMORtbiYuErufPHxEEOFo4` |
+| `GOOGLE_CREDENTIALS` | Your Google Service Account JSON (see below) |
+
+### 2. Create a Google Service Account
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com)
+2. Create a project → Enable **Google Sheets API** and **Google Drive API**
+3. Go to **IAM & Admin → Service Accounts → Create Service Account**
+4. Download the JSON key
+5. Paste the entire JSON as the `GOOGLE_CREDENTIALS` secret
+6. Share your Google Sheet with the service account email (Editor access)
+
+### 3. Enable GitHub Pages
+
+1. Repo → **Settings → Pages**
+2. Source: **Deploy from branch → main → / (root)**
+3. Your app will be live at: `https://debesco4u.github.io/remoterep/`
+
+### 4. Create a GitHub Personal Access Token
+
+1. GitHub → **Settings → Developer settings → Personal access tokens → Tokens (classic)**
+2. New token → tick **`workflow`** scope
+3. Copy the token and paste it into the dashboard when you open it
+
+---
+
+## File structure
+
+```
+├── index.html                      ← Dashboard (GitHub Pages)
+├── qualify.py                      ← AI qualification script
+├── .github/
+│   └── workflows/
+│       └── qualify.yml             ← GitHub Actions workflow
+└── README.md
+```

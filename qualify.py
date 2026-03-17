@@ -8,7 +8,7 @@ then writes results back to the sheet.
 import os
 import json
 import time
-import re
+import sys
 import gspread
 from google.oauth2.service_account import Credentials
 import requests
@@ -16,11 +16,9 @@ from bs4 import BeautifulSoup
 from openai import OpenAI
 
 # ── Config ────────────────────────────────────────────────────────────────────
-SPREADSHEET_ID = os.environ["SPREADSHEET_ID"]
-SHEET_NAME      = "Companies"
-OPENAI_API_KEY  = os.environ["OPENAI_API_KEY"]
-
-# Google credentials come in as a JSON string stored in a secret
+SPREADSHEET_ID    = os.environ["SPREADSHEET_ID"]
+SHEET_NAME        = "Companies"
+OPENAI_API_KEY    = os.environ["OPENAI_API_KEY"]
 GOOGLE_CREDS_JSON = os.environ["GOOGLE_CREDENTIALS"]
 
 # Column indices (0-based)
@@ -34,14 +32,37 @@ COL_DATE     = 6   # G
 
 # ── Google Sheets client ──────────────────────────────────────────────────────
 def get_sheet():
-    creds_dict = json.loads(GOOGLE_CREDS_JSON)
-    scopes = [
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive",
-    ]
-    creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
-    gc = gspread.authorize(creds)
-    return gc.open_by_key(SPREADSHEET_ID).worksheet(SHEET_NAME)
+    try:
+        creds_dict = json.loads(GOOGLE_CREDS_JSON)
+    except json.JSONDecodeError as e:
+        print(f"❌ GOOGLE_CREDENTIALS secret is not valid JSON: {e}")
+        print("   Make sure you copied the entire JSON file content into the secret.")
+        sys.exit(1)
+
+    service_email = creds_dict.get("client_email", "unknown")
+    print(f"   Service account: {service_email}")
+    print(f"   Spreadsheet ID:  {SPREADSHEET_ID}")
+
+    try:
+        # Use only the Sheets API scope (no Drive needed)
+        gc = gspread.service_account_from_dict(creds_dict)
+        sheet = gc.open_by_key(SPREADSHEET_ID).worksheet(SHEET_NAME)
+        print(f"   ✅ Connected to sheet: {SHEET_NAME}")
+        return sheet
+    except gspread.exceptions.APIError as e:
+        print(f"❌ Google Sheets API error: {e}")
+        print(f"   → Make sure the Sheets API is enabled in your Google Cloud project.")
+        print(f"   → Visit: https://console.cloud.google.com/apis/library/sheets.googleapis.com")
+        sys.exit(1)
+    except PermissionError:
+        print(f"❌ Permission denied accessing the spreadsheet.")
+        print(f"   → Share the sheet with: {service_email}")
+        print(f"   → Give it 'Editor' access.")
+        print(f"   → Sheet URL: https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ Unexpected error connecting to sheet: {type(e).__name__}: {e}")
+        sys.exit(1)
 
 # ── Web scraping ──────────────────────────────────────────────────────────────
 HEADERS = {
@@ -62,7 +83,6 @@ def scrape_website(url: str) -> str:
         resp = requests.get(url, headers=HEADERS, timeout=12, allow_redirects=True)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
-        # Remove scripts/styles
         for tag in soup(["script", "style", "nav", "footer", "header"]):
             tag.decompose()
         text = " ".join(soup.get_text(separator=" ").split())
@@ -90,12 +110,7 @@ NOT a good fit:
 """
 
 def qualify_company(company: str, website: str, website_text: str) -> tuple[str, str]:
-    """
-    Returns (result, reason).
-    result is one of: "✅ Qualified", "❌ Not a Fit", "⚠️ Needs Review"
-    """
     client = OpenAI(api_key=OPENAI_API_KEY)
-
     prompt = f"""
 You are a business development assistant for 4K Projects, a 3D visualisation studio.
 
@@ -127,9 +142,7 @@ Use "⚠️ Needs Review" only when there is genuine ambiguity.
             response_format={"type": "json_object"},
         )
         data = json.loads(response.choices[0].message.content)
-        result = data.get("result", "⚠️ Needs Review")
-        reason = data.get("reason", "Unable to determine")
-        return result, reason
+        return data.get("result", "⚠️ Needs Review"), data.get("reason", "Unable to determine")
     except Exception as e:
         return "⚠️ Needs Review", f"AI error: {e}"
 
@@ -137,19 +150,17 @@ Use "⚠️ Needs Review" only when there is genuine ambiguity.
 def main():
     print("🔌 Connecting to Google Sheets…")
     sheet = get_sheet()
-    rows = sheet.get_all_values()
+    rows  = sheet.get_all_values()
 
     if not rows:
         print("Sheet is empty.")
         return
 
-    header = rows[0]
-    data   = rows[1:]
-    today  = time.strftime("%d/%m/%Y")
+    data  = rows[1:]  # skip header
+    today = time.strftime("%d/%m/%Y")
 
     processed = 0
-    for i, row in enumerate(data, start=2):  # 1-indexed; row 1 is header
-        # Pad row if needed
+    for i, row in enumerate(data, start=2):
         while len(row) < 7:
             row.append("")
 
@@ -157,7 +168,6 @@ def main():
         website = row[COL_WEBSITE].strip()
         result  = row[COL_RESULT].strip()
 
-        # Skip already qualified rows or rows without a company name
         if not company:
             continue
         if result in ("✅ Qualified", "❌ Not a Fit", "⚠️ Needs Review"):
@@ -166,21 +176,15 @@ def main():
 
         print(f"\n🔍 Processing: {company} ({website})")
 
-        # Scrape
         text = scrape_website(website)
         print(f"   Scraped {len(text)} chars")
 
-        # Qualify
         qual_result, qual_reason = qualify_company(company, website, text)
         print(f"   → {qual_result}: {qual_reason}")
 
-        # Write back
-        sheet.update(
-            f"E{i}:G{i}",
-            [[qual_result, qual_reason, today]]
-        )
+        sheet.update(f"E{i}:G{i}", [[qual_result, qual_reason, today]])
         processed += 1
-        time.sleep(1)  # be polite to rate limits
+        time.sleep(1)
 
     print(f"\n✅ Done — processed {processed} companies.")
 
